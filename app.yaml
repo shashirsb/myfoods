@@ -29,6 +29,7 @@ metadata:
   name: myfoods-service
   namespace: myfoods-ns
 spec:
+  type: LoadBalancer
   selector:
     app: myfoods
   ports:
