@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Draw GeoJSON points</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position:relative; top: 0; bottom: 0; width: auto; height: 400px;}
+    .column {
+      float: left;
+      min-height: 50px;
+      /* Should be removed. Only for demonstration */
+    }
+
+    .left {
+      width: 70%;
+    }
+
+    .right {
+      width: 20%;
+    }
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+</style>
+</head>
+<body>
+
+    
+    <div class="row">
+        <div class="column right">
+            <img src="./images/salmon.jpg" alt="Girl in a jacket">
+        </div>
+        <div class="column left">
+          <div id="map"></div>
+        </div>
+      </div>
+
+<script>
+    var map = new maplibregl.Map({
+        container: 'map',
+        style:
+            'https://api.maptiler.com/maps/positron/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL',
+        center: [0, 0],
+        zoom: 1
+    });
+
+    map.on('load', function () {
+        // Add an image to use as a custom marker
+        map.loadImage(
+            'https://maplibre.org/maplibre-gl-js-docs/assets/osgeo-logo.png',
+            function (error, image) {
+                if (error) throw error;
+                map.addImage('custom-marker', image);
+                // Add a GeoJSON source with 15 points
+                map.addSource('conferences', {
+                    'type': 'geojson',
+                    'data': { "type": "FeatureCollection", "features": [{ "type": "Feature", "properties": { "ogr_fid": "23 main, colnbrook UB7BD", "rd_cls": "Kerbana", "distance_m": "168.886494476744", "marker-color": "" }, "geometry": { "type": "Point", "coordinates": [78.84889, 23.91668, 0] } }, { "type": "Feature", "properties": { "ogr_fid": "11 cross road, uxbridge highway UB8ID", "rd_cls": "Kerbana", "distance_m": "306.397703449732", "marker-color": "" }, "geometry": { "type": "Point", "coordinates": [78.84949, 23.91551, 0] } }, { "type": "Feature", "properties": { "ogr_fid": "4 Greater Avenue, Springsfield, Uxbridge, UB843D", "rd_cls": "", "distance_m": "312", "marker-color": "#931010" }, "geometry": { "type": "Point", "coordinates": [78.84879938607014, 23.918202560781793, 0] } }] }
+                });
+
+                // Add a symbol layer
+                map.addLayer({
+                    'id': 'conferences',
+                    'type': 'symbol',
+                    'source': 'conferences',
+                    'layout': {
+                        'icon-image': 'custom-marker',
+                        // get the year from the source's "year" property
+                        'text-field': ['get', 'year'],
+                        'text-font': [
+                            'Open Sans Semibold',
+                            'Arial Unicode MS Bold'
+                        ],
+                        'text-offset': [0, 1.25],
+                        'text-anchor': 'top'
+                    }
+                });
+            }
+        );
+    });
+</script>
+
+</body>
+</html>

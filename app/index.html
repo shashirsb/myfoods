@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Oracle MyFood</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+  <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+  <style>
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Karma", sans-serif
+    }
+
+    .w3-bar-block .w3-bar-item {
+      padding: 20px
+    }
+
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      max-width: 300px;
+      margin: auto;
+      text-align: center;
+      font-family: arial;
+    }
+
+    .price {
+      color: grey;
+      font-size: 22px;
+    }
+
+    .card button {
+      border: none;
+      outline: 0;
+      padding: 12px;
+      color: white;
+      background-color: #000;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      font-size: 18px;
+    }
+
+    .card button:hover {
+      opacity: 0.7;
+    }
+
+    h1 {
+      font-size: 1.5em;
+      color: #222;
+    }
+
+    h2 {
+      font-size: 2.9em;
+    }
+
+    h3 {
+      font-size: 1.2em;
+      font-weight: 300;
+      line-height: 2em;
+    }
+
+    p {
+      font-size: .7em;
+      color: #666;
+      line-height: 1.2em;
+    }
+
+    #top,
+    #mid,
+    #bot {
+      /* Targets all id with 'col-' */
+      border-bottom: 1px solid #EEE;
+    }
+
+    #top {
+      min-height: 100px;
+    }
+
+    #mid {
+      min-height: 80px;
+    }
+
+    #bot {
+      min-height: 50px;
+    }
+
+    #top .logo {
+      height: 60px;
+      width: 60px;
+      background: url(http://michaeltruong.ca/images/logo1.png) no-repeat;
+      background-size: 60px 60px;
+    }
+
+    .clientlogo {
+      float: left;
+      height: 60px;
+      width: 60px;
+      background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+      background-size: 60px 60px;
+      border-radius: 50px;
+    }
+
+    .info {
+      display: block;
+
+      margin-left: 0;
+    }
+
+    .title {
+      float: right;
+    }
+
+    .title p {
+      text-align: right;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    td {}
+
+    .tabletitle {
+      font-size: .3em;
+      background: #EEE;
+    }
+
+    .service {
+      border-bottom: 1px solid #EEE;
+    }
+
+    .item {
+      width: 24mm;
+    }
+
+    .itemtext {
+      font-size: 1.0em;
+    }
+
+    #legalcopy {
+      margin-top: 5mm;
+    }
+
+
+
+    /* Create two unequal columns that floats next to each other */
+    .column {
+      float: left;
+      padding: 10px;
+      min-height: 50px;
+      /* Should be removed. Only for demonstration */
+    }
+
+    .left {
+      width: 80%;
+    }
+
+    .right {
+      width: 20%;
+    }
+
+    .left-suggest {
+      width: 35%;
+    }
+
+    .right-suggest {
+      width: 65%;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+
+    .mybutton {
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+
+      font-weight: 900;
+    }
+
+    .button1 {
+      background-color: #4CAF50;
+      width: 100%;
+    }
+
+    .page3-cart-button1 {
+      background-color: #3263dd;
+      width: 48%;
+    }
+
+    .page3-order-button1 {
+      background-color: #4CAF50;
+      width: 48%;
+    }
+
+    .btn-group:after {
+      content: "";
+      clear: both;
+      display: table;
+
+
+    }
+
+    .cart {
+      background-color: #fff;
+      color: #c64533;
+      border-radius: 0.4em;
+      border-width: 0.05em;
+      border-style: solid;
+      border-color: #c64533;
+    }
+
+    .cartML {
+      background-color: #c64533;
+      color: #fff;
+      border-radius: 0.4em;
+      border-width: 0.05em;
+      border-style: solid;
+      border-color: #c64533;
+    }
+
+    #info {
+      display: block;
+      position: relative;
+      margin: 0px auto;
+      width: 50%;
+      padding: 10px;
+      border: none;
+      border-radius: 3px;
+      font-size: 12px;
+      text-align: center;
+      color: #222;
+      background: #fff;
+    }
+
+    #map {
+      position: auto;
+      top: 0;
+      bottom: 0;
+      width: auto;
+      height: 500px;
+    }
+
+    .card {
+      box-shadow: 0 4px 8px 0 #c64533;
+      padding: 8px;
+      text-align: left;
+      background-color: #fff;
+    }
+
+    .solid {
+      border-style: dashed;
+      border-color: rgba(102, 102, 102, 0.27);
+      margin-top: 25px;
+    }
+
+    .form-custom label {
+      font-size: 18px;
+      padding-bottom: 150px;
+    }
+
+    .form-custom input {
+      width: 100%;
+      font-size: 20px;
+    }
+
+
+    /* The Modal (background) */
+    .modal {
+      display: none;
+      /* Hidden by default */
+      position: fixed;
+      /* Stay in place */
+      z-index: 1;
+      /* Sit on top */
+      padding-top: 100px;
+      /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%;
+      /* Full width */
+      height: 100%;
+      /* Full height */
+      overflow: auto;
+      /* Enable scroll if needed */
+      background-color: rgb(0, 0, 0);
+      /* Fallback color */
+      background-color: rgba(0, 0, 0, 0.4);
+      /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+
+    /* The Close Button */
+    .close {
+      color: red;
+      float: right;
+      font-size: 56px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .page3-panel-right {
+      background-color: #c64533;
+      color: #fff;
+      padding: 5px;
+    }
+
+
+
+    /* Green */
+  </style>
+</head>
+
+<body onload="page1Function()">
+
+  <!-- Trigger/Open The Modal -->
+  <button id="myBtn">Open Modal</button>
+
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content" style="background-color: ;Green">
+      <span class="close">&times;</span>
+      <center style="margin-top:100px;">
+
+        <p style="font-size: 50px;">Your Order is Placed !!</p>
+        <p style="font-size: 25px;color:#c64533">it won't be too long before its delivered, thank you</p>
+      </center>
+    </div>
+
+  </div>
+
+  <!-- The Modal -->
+  <div id="orderModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span id="orderClose" class="close">&times;</span>
+      <div id="invoice-POS">
+
+        <h4> Order List</h4>
+        <!--End Info-->
+
+        <!--End InvoiceTop-->
+        <div id="bot">
+          <div id="page3-receipt-table">
+            <table>
+              <tr class=tabletitle>
+                <td>
+                  <h2>Item</h2>
+                <td class=Hours>
+                  <h2>Qty</h2>
+                <td class=Rate>
+                  <h2>Cost</h2>
+                </td>
+              </tr>
+              <tr class=service>
+                <td class=tableitem>
+                  <p class=itemtext>--
+                <td class=tableitem>
+                  <p class=itemtext>0
+                <td class=tableitem>
+                  <p class=itemtext>$0.00
+                </td>
+              </tr>
+
+              <tr class=tabletitle>
+                <td>
+                <td class=Rate>
+                  <h2>Total</h2>
+                <td class=payment>
+                  <h2>$3,644.25</h2>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!--End Table-->
+
+        </div>
+        <!--End InvoiceBot-->
+      </div>
+      <!--End Invoice-->
+    </div>
+
+  </div>
+
+  <!-- Sidebar (hidden by default) -->
+  <nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left"
+    style="display:none;z-index:2;width:40%;min-width:300px" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button">Close Menu</a>
+    <a href="#food" onclick="w3_close()" class="w3-bar-item w3-button">Food</a>
+    <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">About</a>
+  </nav>
+
+
+
+
+
+  <!-- Top menu -->
+  <div class="w3-top">
+    <div class="w3-white w3-xlarge" style="max-width:1200px;margin:auto">
+
+      <div class="w3-center w3-padding-16">
+        <img src="./images/logo.png" style="width:5%;height:5%">
+        MyFoods
+      </div>
+    </div>
+  </div>
+
+  <!-- !PAGE 1 CONTENT! -->
+  <div id="page1" class="w3-main w3-content " style="max-width:1200px;margin-top:100px">
+
+    <div class="row">
+      <div class="column left">
+        <!-- First Photo Grid-->
+        <div class="w3-row-padding  w3-center" id="food">
+          <div class="w3-quarter">
+            <img src="./images/sandwich.jpg" alt="Sandwich" style="width:75%">
+            <h1>sandwich</h1>
+            <p class="price">$19.99</p>
+            <p><button class="mybutton cart" onclick="addToCart('Sandwich',19.99)">Add to Cart</button></p>
+          </div>
+          <div class="w3-quarter">
+            <img src="./images/steak.jpg" alt="Steak" style="width:75%">
+            <h1>steak</h1>
+            <p class="price">$12.00</p>
+            <p><button class="mybutton cart" onclick="addToCart('Steak',12.00)">Add to Cart</button></p>
+          </div>
+          <div class="w3-quarter">
+            <img src="./images/cherries.jpg" alt="Cherries" style="width:75%">
+            <h1>cherries</h1>
+            <p class="price">$17.50</p>
+            <p><button class="mybutton cart" onclick="addToCart('Cherries',17.50)">Add to Cart</button></p>
+          </div>
+          <div class="w3-quarter">
+            <img src="./images/pasta.jpg" alt="Pasta and Wine" style="width:75%">
+            <h1>Pasta</h1>
+            <p class="price">$10.99</p>
+            <p><button class="mybutton cart" onclick="addToCart('Pasta',10.99)">Add to Cart</button></p>
+          </div>
+        </div>
+
+        <!-- Second Photo Grid-->
+        <div class="w3-row-padding w3-padding-16 w3-center">
+          <div class="w3-quarter">
+            <img src="./images/popsicle.jpg" alt="Popsicle" style="width:75%">
+            <h1>popsicle</h1>
+            <p class="price">$1.99</p>
+            <p><button class="mybutton cart" onclick="addToCart('Popsicle',1.99)">Add to Cart</button></p>
+          </div>
+          <div class="w3-quarter">
+            <img src="./images/salmon.jpg" alt="Salmon" style="width:75%">
+            <h1>salmon</h1>
+            <p class="price">$14.00</p>
+            <p><button class="mybutton cart" onclick="addToCart('Salmon',14.00)">Add to Cart</button></p>
+          </div>
+          <div class="w3-quarter">
+            <img src="./images/sandwich.jpg" alt="Sandwich" style="width:75%">
+            <h1>sandwich</h1>
+            <p class="price">$8.50</p>
+            <p><button class="mybutton cart" onclick="addToCart('Sandwich',8.50)">Add to Cart</button></p>
+          </div>
+          <div class="w3-quarter">
+            <img src="./images/croissant.jpg" alt="Croissant" style="width:75%">
+            <h1>croissant</h1>
+            <p class="price">$10.00</p>
+            <p><button class="mybutton cart" onclick="addToCart('Croissant',10.00)">Add to Cart</button></p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="w3-row-padding w3-padding-32">
+          <div class="w3-third">
+            <h3>Oracle MyFood</h3>
+
+            <p>Powered by <a href="cloud.oracle.com" style="color:#c64533">Oracle Cloud Infrastructure OCI</a></p>
+          </div>
+
+
+
+          <div class="w3-third w3-serif">
+            <h3>POPULAR TAGS</h3>
+            <p>
+              <span class="w3-tag margin-bottom" style="color:#c64533;background-color: #EEE;">Burger</span> <span
+                class="w3-tag  w3-small w3-margin-bottom" style="color:#c64533;background-color: #EEE;">Pizza</span>
+              <span class="w3-tag w3-small w3-margin-bottom"
+                style="color:#c64533;background-color: #EEE;">FishChips</span>
+              <span class="w3-tag  w3-small w3-margin-bottom" style="color:#c64533;background-color: #EEE;">Wine</span>
+              <span class="w3-tag  w3-small w3-margin-bottom"
+                style="color:#c64533;background-color: #EEE;">Chocolate</span> <span
+                class="w3-tag  w3-small w3-margin-bottom" style="color:#c64533;background-color: #EEE;">Fried
+                Chicken</span>
+            </p>
+          </div>
+        </footer>
+
+      </div>
+
+      <div class="column right">
+
+        <!--Start ML suggestion-->
+
+        <div id="page1-panel-right">
+          <h4 style="color:#c64533"> Select your favorite food and order </h4>
+
+        </div>
+
+        <div id="ml-suggest">
+
+
+          <div class="row" id="mlcontent">
+            <h4 style="color:#c64533"> Oracle ML model <br> fetching recommendation </h4>
+
+            <center>
+              <img src="./images/hold-on.gif" alt="Cherries" style="width:50%">
+
+            </center>
+          </div>
+
+        
+
+        </div>
+
+        <button id="ml-suggest-btn" class="mybutton button1" onclick="page2Function()">SELECT RESTAURANT</button>
+
+
+
+        <!--End ML suggestion-->
+
+        <!--Start Invoice-->
+
+        <div id="invoice-POS" class="solid">
+          <center id="">
+            <div class="info">
+              <h3> Receipt </h3>
+            </div>
+            <!--End Info-->
+          </center>
+          <!--End InvoiceTop-->
+          <div id="bot">
+            <div id="page1-receipt-table">
+              <table>
+                <tr class="tabletitle">
+                  <td class="">
+                    <h2>Item</h2>
+                  </td>
+                  <td class="Hours">
+                    <h2>Qty</h2>
+                  </td>
+                  <td class="Rate">
+                    <h2>Cost</h2>
+                  </td>
+                </tr>
+
+                <tr class="service">
+                  <td class="tableitem">
+                    <p class="itemtext">--</p>
+                  </td>
+                  <td class="tableitem">
+                    <p class="itemtext">0</p>
+                  </td>
+                  <td class="tableitem">
+                    <p class="itemtext">$0.00</p>
+                  </td>
+                </tr>
+
+
+                <tr class="tabletitle">
+                  <td></td>
+                  <td class="Rate">
+                    <h2></h2>
+                  </td>
+                  <td class="payment">
+                    <h2>$0.00</h2>
+                  </td>
+                </tr>
+
+              </table>
+            </div>
+            <!--End Table-->
+
+          </div>
+          <!--End InvoiceBot-->
+        </div>
+        <!--End Invoice-->
+
+      </div>
+    </div>
+
+    <!-- End page content -->
+  </div>
+
+  <!-- !PAGE 2 CONTENT! -->
+  <div id="page2" class="w3-main w3-content " style="max-width:1200px;margin-top:100px">
+
+    <div class="row">
+      <div class="column left">
+
+
+
+        <div class="row">
+          <div class="column right">
+
+            <form id="right-spatial" onclick="addressSelect()">Click on your address to fetch restaurants
+              <h4 style="color:#c64533"> Oracle Spatial Data </h4>
+
+              <center>
+                <img src="./images/line.gif" alt="Cherries" style="width:100%">
+
+              </center>
+
+            </form>
+
+          </div>
+          <div class="column left">
+            <div id="map"></div>
+          </div>
+        </div>
+
+
+
+        <!-- Footer -->
+        <footer class="w3-row-padding w3-padding-32">
+          <div class="w3-third">
+            <h3>Oracle MyFood</h3>
+
+            <p>Powered by <a href="cloud.oracle.com" style="color:#c64533">Oracle Cloud Infrastructure OCI</a></p>
+          </div>
+
+
+
+          <div class="w3-third w3-serif">
+            <h3>POPULAR TAGS</h3>
+            <p>
+              <span class="w3-tag margin-bottom" style="color:#c64533;background-color: #EEE;">Burger</span> <span
+                class="w3-tag  w3-small w3-margin-bottom" style="color:#c64533;background-color: #EEE;">Pizza</span>
+              <span class="w3-tag w3-small w3-margin-bottom"
+                style="color:#c64533;background-color: #EEE;">FishChips</span>
+              <span class="w3-tag  w3-small w3-margin-bottom" style="color:#c64533;background-color: #EEE;">Wine</span>
+              <span class="w3-tag  w3-small w3-margin-bottom"
+                style="color:#c64533;background-color: #EEE;">Chocolate</span> <span
+                class="w3-tag  w3-small w3-margin-bottom" style="color:#c64533;background-color: #EEE;">Fried
+                Chicken</span>
+            </p>
+          </div>
+        </footer>
+
+      </div>
+
+      <div class="column right">
+
+        <!--Start ML suggestion-->
+
+        <div id="page2-panel-right">
+          <h4 style="color:#c64533"> Selected restauranted</h4>
+          <div class="row">
+            <div class="column left-suggest">
+              <img src="./images/marker.png" alt="Cherries" style="width:75%">
+            </div>
+            <div id="selected_address" class="column right-suggest">
+              No address
+            </div>
+          </div>
+          <button id="page2-button" class="mybutton button1" onclick="page3Function()">CONFIRM ORDER FOR
+            DELIVERY</button>
+
+          <div id="invoice-POS" class="solid">
+            <center id="">
+              <div class="info">
+                <h3> Receipt </h3>
+              </div>
+              <!--End Info-->
+            </center>
+            <!--End InvoiceTop-->
+            <div id="bot">
+              <div id="page2-receipt-table">
+                <table>
+                  <tr class=tabletitle>
+                    <td>
+                      <h2>Item</h2>
+                    <td class=Hours>
+                      <h2>Qty</h2>
+                    <td class=Rate>
+                      <h2>Cost</h2>
+                    </td>
+                  </tr>
+                  <tr class=service>
+                    <td class=tableitem>
+                      <p class=itemtext>--
+                    <td class=tableitem>
+                      <p class=itemtext>0
+                    <td class=tableitem>
+                      <p class=itemtext>$0.00
+                    </td>
+                  </tr>
+
+                  <tr class=tabletitle>
+                    <td>
+                    <td class=Rate>
+                      <h2>Total</h2>
+                    <td class=payment>
+                      <h2>$3,644.25</h2>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <!--End Table-->
+
+            </div>
+            <!--End InvoiceBot-->
+          </div>
+          <!--End Invoice-->
+        </div>
+      </div>
+    </div>
+
+    <!-- End page content -->
+  </div>
+
+  <!-- !PAGE 2 CONTENT! -->
+  <div id="page3" class="w3-main w3-content " style="max-width:1200px;margin-top:100px">
+
+    <div class="row">
+      <div class="column left">
+
+
+        <div class="row">
+
+          <center>
+            <h4 style="color:#c64533"> Enter your details</h4>
+          </center>
+
+          <div id="spatial">
+            <div class="row" style="padding: 10px;">
+              <form class="form-custom">
+                <label for="fname">Full Name</label>
+                <input type="text" id="fname" name="fname">
+                <br><br>
+                <label for="phone">Phone No.</label>
+                <input style="width:100%" type="text" id="phone" name="phone">
+                <br><br>
+                <label for="address">Address</label>
+                <input style="width:100%" type="text" id="address" name="address">
+                <br><br>
+                <label for="card">Credit Card</label>
+                <input style="width:100%" type="text" id="card" name="card">
+              </form>
+            </div>
+          </div>
+          <div class="btn-group">
+            <button id="vieworderbutton" class="mybutton page3-cart-button1" onclick="viewCart()">View Order</button>
+            <button class="mybutton page3-order-button1" onclick="placeOrder()">Place Order</button>
+          </div>
+        </div>
+
+
+
+        <!-- Footer -->
+        <footer class="w3-row-padding w3-padding-32">
+          <div class="w3-third">
+            <h3>Oracle MyFood</h3>
+
+            <p>Powered by <a href="cloud.oracle.com" style="color:#c64533">Oracle Cloud Infrastructure OCI</a></p>
+          </div>
+
+
+
+          <div class="w3-third w3-serif">
+            <h3>POPULAR TAGS</h3>
+            <p>
+              <span class="w3-tag margin-bottom" style="color:#c64533;background-color: #EEE;">Burger</span> <span
+                class="w3-tag  w3-small w3-margin-bottom" style="color:#c64533;background-color: #EEE;">Pizza</span>
+              <span class="w3-tag w3-small w3-margin-bottom"
+                style="color:#c64533;background-color: #EEE;">FishChips</span>
+              <span class="w3-tag  w3-small w3-margin-bottom" style="color:#c64533;background-color: #EEE;">Wine</span>
+              <span class="w3-tag  w3-small w3-margin-bottom"
+                style="color:#c64533;background-color: #EEE;">Chocolate</span> <span
+                class="w3-tag  w3-small w3-margin-bottom" style="color:#c64533;background-color: #EEE;">Fried
+                Chicken</span>
+            </p>
+          </div>
+        </footer>
+
+      </div>
+
+      <div class="column right">
+
+        <!--Start ML suggestion-->
+
+
+        <div id="page3-panel-right">
+
+
+
+
+          <!--End ML suggestion-->
+
+          <!--Start Invoice-->
+          <div class="page3-panel-right" style="margin-top:75px">
+            <center>
+              <h4> Restaurant details</h4>
+
+              <img src="./images/marker.png" alt="Cherries" style="width:15%"><b style="font-size: 25px"> MyFoods </b>
+              <br><br>
+              <div style="font-weight: 300;" id="selected_address-page3">
+                23 main, collbrook UB7BD
+              </div>
+            </center>
+          </div>
+          <br>
+
+          <div class="page3-panel-right" style="margin-top:5px">
+            <center>
+              <h4> Total Payment</h4>
+              <div style="font-weight: 300;font-size: 50px;" id="final-cost">
+                $ 100.00
+              </div>
+            </center>
+          </div>
+          <br>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- End page content -->
+  </div>
+
+  <script>
+
+    var globalJsonObject = "{ \"items\": [] }";
+    var _count = 1;
+    var marker;
+    var customerlatlng;
+    var fname;
+    var phone;
+    var address;
+    var card;
+    var restaurant_id;
+    var restaurant_address;
+    var restaurant_latlng;
+
+    // Get the modal
+    var modal = document.getElementById("myModal");
+    var ordermodal = document.getElementById("orderModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+    var orderbtn = document.getElementById("vieworderbutton");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    var orderspan = document.getElementById("orderClose");
+
+
+    function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function () {
+      modal.style.display = "block";
+    }
+
+    orderbtn.onclick = function () {
+      ordermodal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+      modal.style.display = "none";
+      location.reload();
+    }
+
+    orderspan.onclick = function () {
+      ordermodal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+      if (event.target == ordermodal) {
+        ordermodal.style.display = "none";
+      }
+    }
+    // Script to open and close sidebar
+    var map = new maplibregl.Map({
+      container: 'map', // container id
+      style:
+        'https://api.maptiler.com/maps/streets/style.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL',
+      center: [103.868409, 1.347768], // starting position
+      zoom: 10.75 // starting zoom
+    });
+
+
+    function w3_open() {
+      document.getElementById("mySidebar").style.display = "block";
+    }
+
+    function w3_close() {
+      document.getElementById("mySidebar").style.display = "none";
+    }
+
+    function page1Function() {
+      const page1 = document.getElementById('page1');
+      //
+      page1.style.display = 'block';
+      // page1.scrollIntoView();
+
+      //
+      document.getElementById('page2').style.display = 'none';
+      document.getElementById('page3').style.display = 'none';
+      document.getElementById('ml-suggest').style.display = 'none';
+      document.getElementById('page1-panel-right').style.display = 'block';
+      //
+      document.getElementById('page2-panel-right').style.display = 'none';
+      document.getElementById('page3-panel-right').style.display = 'none';
+      document.getElementById('myBtn').style.display = 'none';
+      document.getElementById('page2-button').style.display = 'none';
+
+    }
+
+    function page2Function() {
+      const page1 = document.getElementById('page1');
+      page1.style.display = 'none';
+      // page1.scrollIntoView();
+
+      document.getElementById('page2').style.display = 'block';
+      document.getElementById('page3').style.display = 'none';
+      document.getElementById('ml-suggest').style.display = 'none';
+      document.getElementById('page1-panel-right').style.display = 'none';
+      document.getElementById('page2-panel-right').style.display = 'block';
+      document.getElementById('page3-panel-right').style.display = 'none';
+      document.getElementById('myBtn').style.display = 'none';
+      document.getElementById('page2-button').style.display = 'none';
+    }
+
+    function page3Function() {
+      const page1 = document.getElementById('page1');
+      page1.style.display = 'none';
+      // page1.scrollIntoView();
+
+      document.getElementById('page2').style.display = 'none';
+      document.getElementById('page3').style.display = 'block';
+      document.getElementById('ml-suggest').style.display = 'none';
+      document.getElementById('page1-panel-right').style.display = 'none';
+      document.getElementById('page2-panel-right').style.display = 'none';
+      document.getElementById('page3-panel-right').style.display = 'block';
+      document.getElementById('myBtn').style.display = 'none';
+
+
+    }
+
+    function placeOrder() {
+      modal.style.display = "block";
+      console.log(globalJsonObject);
+      console.log(customerlatlng);
+
+      fname = document.getElementById("fname").value;
+      console.log(fname);
+      phone = document.getElementById("phone").value;
+      console.log(phone);
+      address = document.getElementById("address").value;
+      console.log(address);
+      card = document.getElementById("card").value;
+      console.log(card);
+
+      URL = "https://rddainsuh6u1okc-jsondb.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/api/frontend?phone="+phone+"&name="+fname+"&location="+address+"&card="+card;
+
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', URL);
+  
+      xhr.send(orderobj);
+
+      console.log(restaurant_id);
+      console.log(restaurant_address);
+      console.log(restaurant_latlng);
+
+
+      const jsonItemsObject = JSON.parse(globalJsonObject);
+
+      // Increase count for the food item if exists
+
+      const jsonItemsCountArray = jsonItemsObject.items;
+
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+      var yyyy = today.getFullYear();
+      today = mm + '-' + dd + '-' + yyyy;
+      var time  = new Date(new Date().getTime() + 4*60*60*1000).toLocaleTimeString();
+
+      for (let i = 0; i < jsonItemsCountArray.length; i++) {
+        let obj = jsonItemsCountArray[i];
+
+        _orderdate = today;
+        _ordertime = time;
+        _orderlineid = i + 1;
+        _orderquantity = obj.properties.count;
+        _orderamount = Number(obj.properties.value * obj.properties.count).toFixed(2);
+        _lat = customerlatlng.lat;
+        _long = customerlatlng.lng;
+        _itemid = obj.properties.name;
+        _orderid = new Date().getUTCMilliseconds();
+
+
+
+        var orderobj = '{'
+       +'"ORDERDATE" : "'+_orderdate+'",'
+       +'"ORDERTIME"  : "'+_ordertime+'",'
+       +'"ORDER_LINEID" : "'+_orderlineid+'",'
+       +'"ORDERQUANTITY" : "'+_orderquantity+'",'
+       +'"ITEMID" : "'+_itemid+'",'
+       +'"ORDERAMOUNT" : "'+_orderamount+'",'
+       +'"ORDERID" : "'+_orderid+'",'
+       +'"LATITUDE" : "'+_lat+'",'
+       +'"LONGITUDE" : "'+_long+'"'
+       +'}';
+
+ 
+
+
+       // var dist = "5000";
+      URL = "https://rddainsuh6u1okc-jsondb.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/api/frontend";
+
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', URL);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(orderobj);
+
+
+
+
+      }
+
+    }
+
+    function viewCart() {
+      modalCart.style.display = "block";
+
+    }
+
+
+
+    function addToCart(_food, _value) {
+
+
+
+
+      // Here we call ML REST API for retrieving the data
+      
+      document.getElementById('page1-panel-right').style.display = 'none';
+      document.getElementById('page2-panel-right').style.display = 'none';
+
+      // Receipt Update
+
+      const jsonItemsObject = JSON.parse(globalJsonObject);
+
+      // Increase count for the food item if exists
+
+      const jsonItemsCountArray = jsonItemsObject.items;
+
+      for (let i = 0; i < jsonItemsCountArray.length; i++) {
+        let obj = jsonItemsCountArray[i];
+        if (obj.properties.name == _food) {
+          _count = parseInt(obj.properties.count) + 1;
+          jsonItemsObject['items'].splice(i, 1);
+          //console.log(_count);
+        }
+      }
+
+
+      jsonItemsObject['items'].push({ "typ": "item", "properties": { "name": "" + _food + "", "value": "" + _value + "", "count": "" + _count++ + "" } });
+      _count = 1;
+      globalJsonObject = JSON.stringify(jsonItemsObject);
+
+      const jsonItemsArray = jsonItemsObject.items;
+
+      var table = "<table><tr class=tabletitle><td><h2>Item</h2><td class=Hours><h2>Qty</h2><td class=Rate><h2>Cost</h2></td></tr>";
+      let total = 0;
+      for (let i = 0; i < jsonItemsArray.length; i++) {
+        let obj = jsonItemsArray[i];
+        total += obj.properties.value * obj.properties.count;
+
+        //var rowData = "<tr style=padding:25px;><td>" + obj.properties.ogr_fid + "</td><td>" + obj.properties.distance_m + "</td></tr>";
+        var rowData = "<tr class=service><td class=tableitem><p class=itemtext>" + obj.properties.name + "<td class=tableitem><p class=itemtext>" + obj.properties.count + " x " + Number(obj.properties.value).toFixed(2) + "<td class=tableitem><p class=itemtext>$ " + Number(obj.properties.value * obj.properties.count).toFixed(2) + "</td></tr>";
+        table += rowData;
+      }
+      document.getElementById("page1-receipt-table").innerHTML = table + "<tr class=tabletitle><td><td class=Rate><h2>Total</h2><td class=payment><h2>$ " + total.toFixed(2) + "</h2></td></tr></table>";
+      document.getElementById("page2-receipt-table").innerHTML = table + "<tr class=tabletitle><td><td class=Rate><h2>Total</h2><td class=payment><h2>$ " + total.toFixed(2) + "</h2></td></tr></table>";
+      document.getElementById("page3-receipt-table").innerHTML = table + "<tr class=tabletitle><td><td class=Rate><h2>Total</h2><td class=payment><h2>$ " + total.toFixed(2) + "</h2></td></tr></table>";
+      document.getElementById("final-cost").innerHTML = total.toFixed(2);
+
+
+      // GET ML items
+
+      // var dist = "5000";
+      URL = "https://rddainsuh6u1okc-jsondb.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/api/ml?item=" + _food.toLowerCase();
+      //URL = "https://api.github.com/users/hadley/orgs"
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', URL);
+
+      // set response format
+      xhr.responseType = 'json';
+
+      xhr.send();
+
+      xhr.onload = () => {
+        // get JSON response
+
+        const geoJSONData = xhr.response;
+        console.log(geoJSONData.items.length);
+
+        if (geoJSONData.items.length > 0) {
+          document.getElementById('ml-suggest').style.display = 'block';
+          // delay(3000).then(() => console.log('ran after 1 second1 passed'));
+          
+          var recomm = geoJSONData.items[0].recommendation.toLowerCase();
+          var recomm_price;
+          if (recomm == 'coke') {
+            recomm_price = 1.99;
+          }
+          else if (recomm == 'sandwich') {
+            recomm_price = 19.99;
+          }
+          else if (recomm == 'steak') {
+            recomm_price = 12.00;
+          }
+          else if (recomm == 'cherries') {
+            recomm_price = 17.50;
+          }
+          else if (recomm == 'pasta') {
+            recomm_price = 10.99;
+          }
+          else if (recomm == 'popsicle') {
+            recomm_price = 1.99;
+          }
+          else if (recomm == 'salmon') {
+            recomm_price = 14.00;
+          } else if (recomm == 'pepsi') {
+            recomm_price = 1.99;
+          } else if (recomm == 'lassi') {
+            recomm_price = 2.50;
+          }
+          else if (recomm == 'wine') {
+            recomm_price = 12.50;
+          }
+          else if (recomm == 'hotchocolate') {
+            recomm_price = 2.99;
+          }
+          else if (recomm == 'fanta') {
+            recomm_price = 1.99;
+          }
+
+          var myMLContent = '<h4 style="color:#c64533"> You may also like </h4><div class="column left-suggest"><img src="./images/' + recomm + '.jpg" alt="' + recomm + '" style="width:75%""></div><div class="column right-suggest"><h1>' + recomm + '</h1><h5>$' + recomm_price + '</h5><p><button class="mybutton cartML" onclick=addToCartML(\"' + recomm + '\",1.99)>Add</button></p></div>';
+          document.getElementById("mlcontent").innerHTML = myMLContent;
+        } else {
+          var myMLContent = '<h4 style="color:#c64533"> Select your favorite food and order </h4>';
+          document.getElementById("mlcontent").innerHTML = myMLContent;
+        }
+
+      }
+
+    }
+
+
+    function addToCartML(_food, _value) {
+
+
+
+      // Here we call ML REST API for retrieving the data
+      document.getElementById('ml-suggest').style.display = 'block';
+      document.getElementById('page1-panel-right').style.display = 'none';
+      document.getElementById('page2-panel-right').style.display = 'none';
+
+      // Receipt Update
+
+      const jsonItemsObject = JSON.parse(globalJsonObject);
+
+      // Increase count for the food item if exists
+
+      const jsonItemsCountArray = jsonItemsObject.items;
+
+      for (let i = 0; i < jsonItemsCountArray.length; i++) {
+        let obj = jsonItemsCountArray[i];
+        if (obj.properties.name == _food) {
+          _count = parseInt(obj.properties.count) + 1;
+          jsonItemsObject['items'].splice(i, 1);
+          //console.log(_count);
+        }
+      }
+
+
+      jsonItemsObject['items'].push({ "typ": "item", "properties": { "name": "" + _food + "", "value": "" + _value + "", "count": "" + _count++ + "" } });
+      _count = 1;
+      globalJsonObject = JSON.stringify(jsonItemsObject);
+
+      const jsonItemsArray = jsonItemsObject.items;
+
+      var table = "<table><tr class=tabletitle><td><h2>Item</h2><td class=Hours><h2>Qty</h2><td class=Rate><h2>Cost</h2></td></tr>";
+      let total = 0;
+      for (let i = 0; i < jsonItemsArray.length; i++) {
+        let obj = jsonItemsArray[i];
+        total += obj.properties.value * obj.properties.count;
+
+        //var rowData = "<tr style=padding:25px;><td>" + obj.properties.ogr_fid + "</td><td>" + obj.properties.distance_m + "</td></tr>";
+        var rowData = "<tr class=service><td class=tableitem><p class=itemtext>" + obj.properties.name + "<td class=tableitem><p class=itemtext>" + obj.properties.count + " x " + Number(obj.properties.value).toFixed(2) + "<td class=tableitem><p class=itemtext>$ " + Number(obj.properties.value * obj.properties.count).toFixed(2) + "</td></tr>";
+        table += rowData;
+      }
+      document.getElementById("page1-receipt-table").innerHTML = table + "<tr class=tabletitle><td><td class=Rate><h2>Total</h2><td class=payment><h2>$ " + total.toFixed(2) + "</h2></td></tr></table>";
+      document.getElementById("page2-receipt-table").innerHTML = table + "<tr class=tabletitle><td><td class=Rate><h2>Total</h2><td class=payment><h2>$ " + total.toFixed(2) + "</h2></td></tr></table>";
+      document.getElementById("page3-receipt-table").innerHTML = table + "<tr class=tabletitle><td><td class=Rate><h2>Total</h2><td class=payment><h2>$ " + total.toFixed(2) + "</h2></td></tr></table>";
+      document.getElementById("final-cost").innerHTML = total.toFixed(2);
+
+
+    }
+
+    map.on('click', function (e) {
+
+      if (map.getSource('datasource') != null) {
+        marker.setLngLat([0.0, 0.0]);
+        map.removeImage('custom-marker');
+        map.removeLayer('conferences');
+        map.removeSource('datasource');
+      }
+
+      /// For rest call
+
+      // var ItemJSON;
+
+      // ItemJSON = '[  {    "Id": 1,    "ProductID": "1",    "Quantity": 1,  },  {    "Id": 1,    "ProductID": "2",    "Quantity": 2,  }]';
+      // var lat = "23.890178904023145";
+      // var lng = "79.05081176757744";
+      var _latLong = e.lngLat.wrap();
+      customerlatlng = e.lngLat;
+      var lat = _latLong.lat;
+      var lng = _latLong.lng;
+      let dist = "10000000000000000000000";
+      // var dist = "5000";
+      URL = "https://rddainsuh6u1okc-jsondb.adb.us-ashburn-1.oraclecloudapps.com/ords/admin/api/frontend?long=" + lng + "&lat=" + lat;
+      //URL = "https://api.github.com/users/hadley/orgs"
+
+
+
+
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('GET', URL);
+
+      // set response format
+      xhr.responseType = 'json';
+
+      xhr.send();
+
+      xhr.onload = () => {
+        // get JSON response
+
+        //const geoJSONData = (xhr.response).items[0].geojson; 
+        const geoJSONData = xhr.response;
+
+        var sourceData = JSON.parse(geoJSONData.items[0].geojson)
+
+        console.log(geoJSONData);
+
+        //const geoJSONData = "{ \"type\": \"FeatureCollection\", \"features\": [{ \"type\": \"Feature\", \"properties\": { \"ogr_fid\": \"23 main, colnbrook UB7BD\", \"rd_cls\": \"Kerbana\", \"distance_m\": \"168.886494476744\", \"marker-color\": \"\" }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [78.84889, 23.91668, 0] } }, { \"type\": \"Feature\", \"properties\": { \"ogr_fid\": \"11 cross road, uxbridge highway UB8ID\", \"rd_cls\": \"Kerbana\", \"distance_m\": \"306.397703449732\", \"marker-color\": \"\" }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [78.84949, 23.91551, 0] } }, { \"type\": \"Feature\", \"properties\": { \"ogr_fid\": \"4 Greater Avenue, Springsfield, Uxbridge, UB843D\", \"rd_cls\": \"\", \"distance_m\": \"312\", \"marker-color\": \"#931010\" }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [78.84879938607014, 23.918202560781793, 0] } }] }";
+        //var strgeojson = JSON.stringify({ "type": "FeatureCollection", "features": [{ "type": "Feature", "properties": { "ogr_fid": "23 main, colnbrook UB7BD", "rd_cls": "Kerbana", "distance_m": "168.886494476744", "marker-color": "" }, "geometry": { "type": "Point", "coordinates": [78.84889, 23.91668, 0] } }, { "type": "Feature", "properties": { "ogr_fid": "11 cross road, uxbridge highway UB8ID", "rd_cls": "Kerbana", "distance_m": "306.397703449732", "marker-color": "" }, "geometry": { "type": "Point", "coordinates": [78.84949, 23.91551, 0] } }, { "type": "Feature", "properties": { "ogr_fid": "4 Greater Avenue, Springsfield, Uxbridge, UB843D", "rd_cls": "", "distance_m": "312", "marker-color": "#931010" }, "geometry": { "type": "Point", "coordinates": [78.84879938607014, 23.918202560781793, 0] } }] });
+
+
+        marker = new maplibregl.Marker()
+          .setLngLat(e.lngLat)
+          .addTo(map);
+
+
+        map.loadImage(
+          './images/store.png',
+          function (error, image) {
+            if (error) throw error;
+            map.addImage('custom-marker', image);
+
+
+            // Add a GeoJSON source with 15 points
+            map.addSource('datasource', {
+              type: 'geojson',
+              data: sourceData //{"type": "FeatureCollection", "features":[{"type": "Feature", "properties": {"pk_col":"110","pin_code":"247911","store_address":"29 Tanglin Road, Lobby Floor, St. Regis Hotel, Singapore 247911","store_name":"yellowstore - myfoods","distance_m":"1.91016619370826"}, "geometry":{ "type": "Point", "coordinates": [103.8854, 1.3428] }},{"type": "Feature", "properties": {"pk_col":"4","pin_code":"178882","store_address":"2 Stamford Rd, Level 70, Swiss𴥬 The Stamford, Singapore 178882","store_name":"bluestore - myfoods","distance_m":"6.51452502099871"}, "geometry":{ "type": "Point", "coordinates": [103.8243, 1.3057] }},{"type": "Feature", "properties": {"pk_col":"97","pin_code":"228208","store_address":"1 Scotts Road, #01-16 Shaw Centre, Singapore 228208","store_name":"freshstore - myfoods","distance_m":"6.70542190294397"}, "geometry":{ "type": "Point", "coordinates": [103.8497, 1.3798] }},{"type": "Feature", "properties": {"pk_col":"48","pin_code":"88461","store_address":"38 Tanjong Pagar Road, Singapore 088461","store_name":"seastore - myfoods","distance_m":"11.9145390542917"}, "geometry":{ "type": "Point", "coordinates": [103.7755, 1.3545] }},{"type": "Feature", "properties": {"pk_col":"53","pin_code":"18972","store_address":"2 Bayfront Avenue B1-71, Galleria Level The Shoppes at Marina Bay Sands, Singapore 018972","store_name":"organicstore - myfoods","distance_m":"14.0640800943687"}, "geometry":{ "type": "Point", "coordinates": [103.7769, 1.4018] }},{"type": "Feature", "properties": {"pk_col":"50","pin_code":"18956","store_address":"Level 2 Dining, L2-01 The Shoppes at Marina Bay Sands, 2 Bayfront Ave, Singapore 018956","store_name":"onlinestore - myfoods","distance_m":"16.1461564111943"}, "geometry":{ "type": "Point", "coordinates": [103.7549, 1.4025] }}]}
+            });
+
+            // Add a symbol layer
+            map.addLayer({
+              'id': 'conferences',
+              'type': 'symbol',
+              'source': 'datasource',
+              'layout': {
+                'icon-image': 'custom-marker',
+                // get the year from the source's "year" property
+                'text-field': ['get', 'store_name'],
+                'text-font': [
+                  'Open Sans Semibold',
+                  'Arial Unicode MS Bold'
+                ],
+                'text-offset': [0, 1.25],
+                'text-anchor': 'top'
+              }
+            });
+          }
+        );
+
+        //Table view
+
+
+        const jsonObject = JSON.parse(geoJSONData.items[0].geojson);
+        const jsonArray = jsonObject.features;
+        // console.log("Welcome to Programiz!" +jsonArray);
+        var table = "Pick restaurant";
+
+
+
+        for (let i = 0; i < jsonArray.length; i++) {
+          let obj = jsonArray[i];
+          //var rowData = "<tr style=padding:25px;><td>" + obj.properties.ogr_fid + "</td><td>" + obj.properties.distance_m + "</td></tr>";
+          var rowData = "<br> <div class=card><input type=radio name=JTP id=" + i + " value='" + obj.properties.store_address + "'><br><b>&nbsp; " + obj.properties.store_name + " </b><br>" + obj.properties.store_address + "<br>" + Math.round(obj.properties.distance_m) + "m </div> ";
+          // Store the value in 'table'
+          table += rowData;
+        }
+        document.getElementById("right-spatial").innerHTML = table + "";
+      }
+
+    });
+
+    function addressSelect() {
+
+      // alert(document.querySelector('input[name="JTP"]:checked').value);
+
+
+      document.getElementById('page2-button').style.display = 'block';
+      document.getElementById("selected_address").innerHTML = document.querySelector('input[name="JTP"]:checked').value;
+      document.getElementById("selected_address-page3").innerHTML = document.querySelector('input[name="JTP"]:checked').value;
+
+      restaurant_id = null;
+      restaurant_address = document.querySelector('input[name="JTP"]:checked').value;
+      restaurant_latlng = null;
+    }
+
+    function selectPickUp() {
+
+      const page2 = document.getElementById('page2');
+      page2.style.display = 'block';
+      // page2.scrollIntoView();
+
+      document.getElementById('page1').style.display = 'none';
+    }
+
+
+
+
+
+
+
+
+  </script>
+
+</body>
+
+</html>
